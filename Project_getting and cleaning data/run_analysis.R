@@ -92,7 +92,7 @@ tidy_dataset <-
 head(tidy_dataset, 20)
 tail(tidy_dataset, 10)
 
-# Save the tidy data set as a csv file
-
+# Save the tidy data set as txt and csv  file
+write.table(tidy_dataset,file = "tidyDataset.txt", row.names = FALSE)
 fwrite(tidy_dataset, file="tidyDataSet.csv")
 
