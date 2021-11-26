@@ -19,7 +19,7 @@
 # Review Criteria
   | Goal         | Item            |
   |--------------|-----------------|
-  | Github Repo  | Repo            |
+  | Github Repo  | [Repo](https://github.com/whzemuch/Courera_R_Projects/tree/main/Project_getting%20and%20cleaning%20data)|
   | Tidy Dataset | tidyDataset.csv |
   | Cookbook     | Cookbook.md     |
   | R script     | run_analysis.R  |
