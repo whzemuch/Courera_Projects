@@ -15,7 +15,7 @@ data['date_time'] <- dmy_hms(paste(data$Date, data$Time))
 
 # plot 4
 
-png(filename = "plot4.png")
+png(filename = "plot4.png", width = 480, height = 480, units = "px")
 
 par(mfrow = c(2, 2))
 

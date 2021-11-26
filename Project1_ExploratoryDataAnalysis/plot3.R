@@ -13,7 +13,7 @@ data['date_time'] <- dmy_hms(paste(data$Date, data$Time))
 
 
 # plot 3
-png(filename = "plot3.png")
+png(filename = "plot3.png", width = 480, height = 480, units = "px")
 
 plot(data$date_time, data$Sub_metering_1,type= "l", xlab = "", ylab = "Energy sub metering")
 lines(data$date_time, data$Sub_metering_2, type= 'l', col = 'red')

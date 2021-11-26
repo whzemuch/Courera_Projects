@@ -15,13 +15,13 @@ data['date_time'] <- dmy_hms(paste(data$Date, data$Time))
 
 # plot 1
 
-png(filename = "plot1.png", width = 480, height = 640, units = "px")
+png(filename = "plot1.png", width = 480, height = 480, units = "px")
 
 hist(x = as.numeric(data$Global_active_power),
      #breaks = c(0, 2, 4, 6),
-     main = "",
+     main = "Global Active Power",
      col = "red",
-     xlab = "Global active power(kilowatts)"
+     xlab = "Global active power (kilowatts)"
      )
 
 dev.off()

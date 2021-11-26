@@ -10,7 +10,7 @@ colnames(data) <- colnames(data_2rows)
 data <- subset(data, Date == "1/2/2007" | Date == "2/2/2007")
 data['date_time'] <- dmy_hms(paste(data$Date, data$Time))
 
-png(filename = "plot2.png", width = 480, height = 640, units = "px")
+png(filename = "plot2.png", width = 480, height = 480, units = "px")
 
 # plot 2
 plot(data$date_time, data$Global_active_power, 
