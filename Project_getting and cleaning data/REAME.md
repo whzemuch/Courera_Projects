@@ -17,11 +17,11 @@
   5. Put all the above files to a github repo.
   
 # Review Criteria
-  | Goal         | Item            | Link |
-  |--------------|-----------------|------|
-  | Github Repo  | Repo            | https://github.com/whzemuch/Coursera_Projects |
-  | Tidy Dataset | tidyDataset.csv | https://github.com/whzemuch/Coursera_Projects/blob/main/tidyDataSet.csv|
-  | Cookbook     | Cookbook.md     | https://github.com/whzemuch/Coursera_Projects/blob/main/Cookbook.md |
-  | R script     | run_analysis.R  | https://github.com/whzemuch/Coursera_Projects/blob/main/run_analysis.R|
-  | README       | README.md       | https://github.com/whzemuch/Coursera_Projects/blob/main/REAME.md|
+  | Goal         | Item            |
+  |--------------|-----------------|
+  | Github Repo  | Repo            |
+  | Tidy Dataset | tidyDataset.csv |
+  | Cookbook     | Cookbook.md     |
+  | R script     | run_analysis.R  |
+  | README       | README.md       | 
   
