@@ -1,0 +1,267 @@
+---
+title: "PM2.5"
+author: "whzemuch"
+date: "11/26/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load packages
+```{r}
+library(data.table)
+library(tidyverse)
+
+```
+## Question 1
+  Have total emissions from PM2.5 decreased in the United States from 1999 to 2008? <br>
+  Using the base plotting system, make a plot showing the total PM2.5 emission from all<br>
+  sources for each of the years 1999, 2002, 2005, and 2008.
+
+```{r}
+
+# Read in data 
+library(tidyverse)
+NEI <- readRDS("./exdata_data_NEI_data/summarySCC_PM25.rds")
+SCC <- readRDS("./exdata_data_NEI_data/Source_Classification_Code.rds")
+
+# Calculate the total emission 
+data1 <- 
+  NEI %>% 
+  group_by(year) %>% 
+  summarise(total_emission = sum(Emissions))
+
+# Plot 1 
+png(filename = "./exdata_data_NEI_data/plot1.png")
+
+plot(data1$year, data1$total_emission, 
+     type = "b",
+     lty = 1, 
+     lwd = 1, 
+     main = "PM2.5 in the United States",
+     xlab = "Year",
+     ylab = "Total emission")
+points(data1$year, data1$total_emission,
+       col='red', pch = 19, cex = 2
+       )
+
+dev.off()
+
+```
+
+
+## Question 2
+  Have total emissions from PM2.5 decreased in the Baltimore City, 
+  Maryland (\color{red}{\verb|fips == "24510"|}fips == "24510") from 
+  1999 to 2008?
+  Use the base plotting system to make a plot answering this question.
+```{r}
+
+# Read in data 
+library(tidyverse)
+NEI <- readRDS("./exdata_data_NEI_data/summarySCC_PM25.rds")
+SCC <- readRDS("./exdata_data_NEI_data/Source_Classification_Code.rds")
+
+# Calculate the total emissions in Baltimore City, Maryland
+data2 <- 
+  NEI %>% 
+  filter(fips == "24510") %>% 
+  group_by(year) %>% 
+  summarise(total_emission = sum(Emissions))
+
+# Plot 2
+png(filename = "./exdata_data_NEI_data/plot2.png")
+
+plot(data2$year, data2$total_emission, 
+     type = "b",
+     lty = 1, 
+     lwd = 1, 
+     xlab = "Year",
+     ylab = "Total emission",
+     main = "PM2.5 in Baltimore City, Maryland")
+points(data2$year, data2$total_emission,
+       col='red', pch = 19, cex = 2
+       )
+
+dev.off()
+
+
+
+
+
+```
+
+
+## Question 3
+ Of the four types of sources indicated by the \color{red}{\verb|type|}type (point, nonpoint, onroad, nonroad) variable, which of these four sources have seen decreases in emissions from 1999–2008 for Baltimore City? Which have seen increases in emissions from 1999–2008? Use the ggplot2 plotting system to make a plot answer this question.
+
+```{r}
+# Read in data 
+library(tidyverse)
+NEI <- readRDS("./exdata_data_NEI_data/summarySCC_PM25.rds")
+SCC <- readRDS("./exdata_data_NEI_data/Source_Classification_Code.rds")
+
+# Calculate the total emissions based on year and type
+data3 <- 
+  NEI %>% 
+  filter(fips == "24510") %>% 
+  group_by(year, type) %>% 
+  summarise(total_emission = sum(Emissions))
+
+png(filename = "./exdata_data_NEI_data/plot3.png", width = 720, height = 480)
+
+data3 %>% 
+  ggplot(aes(x = factor(year), y = total_emission, group = 1, color = type)) +
+  geom_point(size = 2) + 
+  geom_line() +
+  facet_wrap(~ type, nrow = 1) + 
+  labs(x = "Year", y = "Total Emission", title = "PM2.5 from four different sources in Baltimore City") +
+  theme_bw() +
+  theme(legend.position = "None", 
+        plot.title = element_text(hjust = 0.5, face = "bold"),
+        strip.text = element_text(face = "bold"),
+        axis.title = element_text(face = "bold"))
+  
+
+dev.off()
+
+```
+
+## Question 4
+  Across the United States, how have emissions from coal combustion-related sources changed from 1999–2008?
+```{r}
+
+# Read in data 
+library(tidyverse)
+NEI <- readRDS("./exdata_data_NEI_data/summarySCC_PM25.rds")
+SCC <- readRDS("./exdata_data_NEI_data/Source_Classification_Code.rds")
+
+# Get the list of SCC for coal combustion-related source
+idx_SCC <-  
+  SCC %>% 
+  filter(str_detect(SCC.Level.One, "Combus")) %>%
+  filter(str_detect(SCC.Level.Four, "Coal")) %>% 
+  select(SCC) %>% deframe()
+  
+png(filename = "./exdata_data_NEI_data/plot4.png")
+
+  NEI %>% 
+  mutate(SCC = factor(SCC)) %>% 
+  filter(SCC %in% idx_SCC) %>% 
+  group_by(year) %>% 
+  summarise(total_emission = sum(Emissions)) %>% 
+  ggplot(aes(x = factor(year), y = total_emission, group = 1, color = "red")) +
+        geom_point(size = 2) +
+        geom_line() +
+        labs(x= "Year",
+             y = "Total Emission",
+             title = "PM2.5 from Coal Combusion Source in US ") +
+        scale_y_continuous(limits = c(0, 600000)) +
+        theme_bw() +
+        theme(legend.position = "None", 
+        plot.title = element_text(hjust = 0.5, face = "bold"),
+        strip.text = element_text(face = "bold"),
+        axis.title = element_text(face = "bold"))
+
+dev.off()          
+  
+
+```
+
+
+## Question 5
+How have emissions from motor vehicle sources changed from 1999–2008 in Baltimore City?
+
+```{r}
+# Read in data 
+library(tidyverse)
+NEI <- readRDS("./exdata_data_NEI_data/summarySCC_PM25.rds")
+SCC <- readRDS("./exdata_data_NEI_data/Source_Classification_Code.rds")
+
+
+# Get the list of SSC from motor vehicle
+idx_scc_motor <- 
+  SCC %>% 
+  filter(str_detect(SCC.Level.Two, "Vehicle")) %>%
+  select(SCC) %>% 
+  deframe() 
+
+# Calculate the total emissions from motor vehicle in Baltimore city
+
+png(filename = "./exdata_data_NEI_data/plot5.png")
+
+NEI %>% 
+  mutate(SCC = factor(SCC)) %>% 
+  filter(SCC %in% idx_scc_motor) %>% 
+  filter(fips == "24510") %>% 
+  group_by(year) %>% 
+  summarise(total_emission = sum(Emissions)) %>% 
+  ggplot(aes(x = factor(year), total_emission, group = 1,  color = "red")) +
+    geom_point(size = 2) + 
+    geom_line() +
+    labs(x = "Year",
+         y = " Total Emissions",
+         title = "PM2.5 from motor vehicles in Baltimore City" ) +
+    theme_bw() +
+    theme(legend.position = "None", 
+        plot.title = element_text(hjust = 0.5, face = "bold"),
+        strip.text = element_text(face = "bold"),
+        axis.title = element_text(face = "bold"))
+dev.off()
+
+
+
+```
+
+## Question 6
+Compare emissions from motor vehicle sources in Baltimore City with emissions from motor vehicle sources in Los Angeles County, California (\color{red}{\verb|fips == "06037"|}fips == "06037"). Which city has seen greater changes over time in motor vehicle emissions?
+
+```{r}
+# Read in data 
+library(tidyverse)
+NEI <- readRDS("./exdata_data_NEI_data/summarySCC_PM25.rds")
+SCC <- readRDS("./exdata_data_NEI_data/Source_Classification_Code.rds")
+
+
+# Get the list of SSC from motor vehicle
+idx_scc_motor <- 
+  SCC %>%  
+  filter(str_detect(SCC.Level.Two, "Vehicle")) %>% 
+  select(SCC) %>% 
+  deframe() 
+
+# Calculate the total emissions from motor vehicle in Baltimore city
+
+png(filename = "./exdata_data_NEI_data/plot6.png", width = 640)
+
+NEI %>% 
+  mutate(SCC = factor(SCC)) %>% 
+  filter(SCC %in% idx_scc_motor) %>% 
+  filter(fips %in% c("24510", "06037")) %>% 
+  group_by(year, fips) %>% 
+  summarise(total_emission = sum(Emissions)) %>% 
+  mutate(fips = fct_recode(fips, `Los Angeles County` = "06037", `Baltimore County` = "24510")) %>% 
+  ggplot(aes(x = factor(year), total_emission, group = 1, color = "red")) +
+    geom_point(size = 2) + 
+    geom_line() +
+    facet_wrap( ~ fips) +
+    labs(x = "Year",
+         y = "Total Emissions", 
+         title ="PM2.5 from motor vehicle in Los Angeles VS Baltimore") +
+    theme_bw() + 
+    theme(legend.position = "None", 
+        plot.title = element_text(hjust = 0.5, face = "bold"),
+        strip.text = element_text(face = "bold"),
+        axis.title = element_text(face = "bold"))
+
+dev.off()
+
+
+```
+
+
+
+
+
